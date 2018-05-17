@@ -30,11 +30,7 @@ import org.eclipse.che.ide.api.editor.codeassist.CompletionsSource;
 import org.eclipse.che.ide.api.editor.document.Document;
 import org.eclipse.che.ide.api.editor.document.DocumentHandle;
 import org.eclipse.che.ide.api.editor.editorconfig.TextEditorConfiguration;
-import org.eclipse.che.ide.api.editor.events.CompletionRequestEvent;
-import org.eclipse.che.ide.api.editor.events.CompletionRequestHandler;
-import org.eclipse.che.ide.api.editor.events.DocumentChangedEvent;
-import org.eclipse.che.ide.api.editor.events.TextChangeEvent;
-import org.eclipse.che.ide.api.editor.events.TextChangeHandler;
+import org.eclipse.che.ide.api.editor.events.*;
 import org.eclipse.che.ide.api.editor.formatter.ContentFormatter;
 import org.eclipse.che.ide.api.editor.keymap.KeyBinding;
 import org.eclipse.che.ide.api.editor.keymap.KeyBindingAction;
@@ -47,6 +43,7 @@ import org.eclipse.che.ide.api.editor.text.TextPosition;
 import org.eclipse.che.ide.api.editor.text.TypedRegion;
 import org.eclipse.che.ide.api.editor.texteditor.HasKeyBindings;
 import org.eclipse.che.ide.api.editor.texteditor.TextEditor;
+import org.eclipse.che.ide.util.StringUtils;
 import org.eclipse.che.ide.util.browser.UserAgent;
 
 /**
@@ -199,7 +196,7 @@ public class OrionEditorInit {
           new KeyBindingAction() {
             @Override
             public boolean action() {
-              showCompletion(codeAssistant, true);
+              //showCompletion(codeAssistant, true);
               return true;
             }
           };
@@ -219,6 +216,24 @@ public class OrionEditorInit {
                   showCompletion(codeAssistant, false);
                 }
               });
+      documentHandle
+          .getDocEventBus()
+          .addHandler(
+              DocumentChangedEvent.TYPE,
+              new DocumentChangedHandler() {
+                @Override
+                public void onDocumentChanged(final DocumentChangedEvent event) {
+                  final String changedText = event.getText();
+                  if (changedText.length() == 1) {
+                    final char inputChar = changedText.charAt(0);
+                    if (StringUtils.isAlpha(inputChar) || inputChar == '.') {
+                      showCompletion(codeAssistant, false);
+                    }
+                  }
+                  //int offset = event.getDocument().getDocument().getLineAtOffset(event.getOffset());
+                  //event.getDocument().getDocument().getContents().split("\n")[event.getOffset()]
+                }
+          });
     } else {
       final KeyBindingAction action =
           new KeyBindingAction() {

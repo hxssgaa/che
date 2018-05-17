@@ -482,10 +482,10 @@ public class ContentAssistWidget implements EventListener {
     }
 
     /* Automatically apply the completion proposal if it only one. */
-    if (getTotalItems() == 1) {
-      applyProposal(proposals.get(0));
-      return;
-    }
+    //if (getTotalItems() == 1) {
+    //  applyProposal(proposals.get(0));
+    //  return;
+    //}
 
     /* Reset popup dimensions and show. */
     popupElement.getStyle().setLeft(caretLocation.getX(), PX);

@@ -144,8 +144,8 @@ public class CodeAssist {
     List<ICompletionProposal> proposals = new ArrayList<>();
     proposals.addAll(
         new JavaAllCompletionProposalComputer().computeCompletionProposals(context, null));
-    proposals.addAll(
-        new TemplateCompletionProposalComputer().computeCompletionProposals(context, null));
+    //proposals.addAll(
+    //    new TemplateCompletionProposalComputer().computeCompletionProposals(context, null));
 
     Collections.sort(proposals, new RelevanceSorter());
 
